@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jeon's Countdown for Rose</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(to bottom, #0d0221, #6a0572);
+            color: #fff;
+            text-align: center;
+            overflow-x: hidden;
+            overflow-y: auto;
+            min-height: 100vh;
+        }
+        .container {
+            padding: 50px 20px;
+            position: relative;
+            z-index: 1;
+        }
+        .main-img {
+            max-width: 220px;
+            border-radius: 50%;
+            box-shadow: 0 0 40px rgba(255, 255, 255, 0.5);
+            margin-bottom: 20px;
+            transition: transform 0.3s ease;
+        }
+        .main-img:hover {
+            transform: scale(1.05);
+        }
+        h1 {
+            font-size: 2.8em;
+            margin-bottom: 10px;
+            color: #d8b4f8;
+        }
+        .countdown {
+            font-size: 2em;
+            margin: 20px 0;
+        }
+        .note {
+            font-size: 1.2em;
+            font-style: italic;
+            max-width: 600px;
+            margin: 0 auto 40px auto;
+            background-color: rgba(0, 0, 0, 0.4);
+            padding: 25px;
+            border-radius: 25px;
+            box-shadow: 0 0 30px rgba(255,255,255,0.2);
+        }
+    
+        /* Simpler image layout */
+        .image-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .image-container img {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 10px;
+            border: 3px solid rgba(255,255,255,0.2);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+        }
+        .image-container img:hover {
+            transform: translateY(-5px);
+            border-color: #d8b4f8;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+        }
+        .petals {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .petal {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: pink;
+            border-radius: 50%;
+            opacity: 0.7;
+            animation: fall 10s linear infinite;
+        }
+        @keyframes fall {
+            0% {transform: translateY(-10%) rotate(0deg);}
+            100% {transform: translateY(110vh) rotate(360deg);}
+        }
+        
+        /* Music Player Styles */
+        .music-section {
+            max-width: 800px;
+            margin: 0 auto 40px;
+            background-color: rgba(0, 0, 0, 0.4);
+            padding: 25px;
+            border-radius: 25px;
+            box-shadow: 0 0 30px rgba(255,255,255,0.2);
+        }
+        .music-section h2 {
+            color: #d6a2e8;
+            margin-bottom: 20px;
+        }
+        .music-controls {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+        .player-buttons {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        button {
+            background-color: #d8b4f8;
+            color: #0d0221;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        button:hover {
+            background-color: #fff;
+            transform: scale(1.05);
+        }
+        .now-playing {
+            font-size: 1.2em;
+            margin-top: 10px;
+            min-height: 2em;
+        }
+        .song-list {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+            width: 100%;
+        }
+        .song-list.show {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .song-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            margin: 8px 0;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .song-item:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+        .song-item.selected {
+            background-color: rgba(216, 180, 248, 0.3);
+            border-left: 4px solid #d8b4f8;
+        }
+        .song-item.active {
+            background-color: rgba(216, 180, 248, 0.5);
+            box-shadow: 0 0 15px rgba(216, 180, 248, 0.4);
+        }
+        .song-item-title {
+            flex-grow: 1;
+            text-align: left;
+            padding-left: 10px;
+        }
+        .song-status {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            margin-right: 10px;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            position: relative;
+        }
+        .song-item.selected .song-status {
+            background-color: #d8b4f8;
+            border-color: white;
+        }
+        .song-item.selected .song-status:after {
+            content: "✓";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 12px;
+        }
+        
+        /* Remember This Letter Box Styles */
+        .letter-section {
+            max-width: 800px;
+            margin: 0 auto 40px;
+            background-color: rgba(0, 0, 0, 0.4);
+            padding: 25px;
+            border-radius: 25px;
+            box-shadow: 0 0 30px rgba(255,255,255,0.2);
+        }
+        .letter-section h2 {
+            color: #d6a2e8;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+        .letter-content {
+            font-size: 1.1em;
+            line-height: 1.6;
+            text-align: left;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            border-left: 4px solid #d8b4f8;
+        }
+        .letter-signature {
+            text-align: right;
+            font-style: italic;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img class="main-img" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTVV1YjdvYZkK2A63pPCku8Sx6D82rVrEdMAHBxdSbU0Fhx2jzx" alt="Jeon Jungkook">
+        <h1>Jeon Jungkook will come back to Rose in </h1>
+        <div class="countdown" id="countdown"></div>
+    <div class="note">
+    "Sometimes, we think things won't be or can't be, but life has a way of surprising us. The world may be vast, and distances may be far, but every beat of my heart echoes with a song meant for someone special. In moments of silence, I can feel her, as if she's right here, waiting. Perhaps we're not fortunate enough to meet just yet, but I'll keep singing, hoping that one day our melodies will align. Until then, know that every song I sing is a step closer to that moment we'll share."<br><br>
+
+    — Jeon to Rose 💌  
+</div>
+  
+        <!-- Music Player Section -->
+        <div class="music-section">
+            <h2>🎵 Rose's Playlist 🎵</h2>
+            <div class="music-controls">
+                <div class="player-buttons">
+                    <button id="playButton">Play</button>
+                    <button id="pauseButton">Pause</button>
+                    <button id="nextButton">Next Song</button>
+                    <button id="showSongsButton">Choose Songs</button>
+                </div>
+                <div class="now-playing" id="nowPlaying">Select a song and press Play</div>
+                <div class="song-list" id="songList">
+                    <!-- Song list will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- Remember This Letter Section -->
+        <div class="letter-section">
+            <h2>✉️ Remember This ✉️</h2>
+            <div class="letter-content">
+                <p>Dear Rose,</p>
+                
+                <p>When you look at the stars tonight, remember that we're under the same sky. Distance may separate us physically, but our hearts remain connected through every melody I sing. Each note carries my thoughts to you, hoping they reach your heart.</p>
+                
+                <p>They say patience is a virtue, and I believe our patience will be rewarded. Until that day comes, I'll continue to pour my feelings into my music, creating songs that carry my message across oceans and continents.</p>
+                
+                <p>Keep this letter close on days when waiting feels impossible. Know that every second that passes brings us one moment closer to each other. The countdown isn't just numbers—it's the heartbeats that will eventually sync when we meet.</p>
+                
+                <p>Stay strong, stay beautiful, and most importantly, stay you. Time and distance are merely temporary obstacles in our story.</p>
+                
+                <div class="letter-signature">
+                    Forever yours,<br>
+                    Jeon 💜
+                </div>
+            </div>
+        </div>
+    </div>
+
+   
+    <div class="petals" id="petals"></div>
+
+    <audio id="audioPlayer"></audio>
+
+    <script>
+        // Countdown Timer
+       const releaseDate = new Date('2025-06-11T00:00:00').getTime();
+        const countdown = document.getElementById('countdown');
+
+        const updateCountdown = () => {
+            const now = new Date().getTime();
+            const diff = releaseDate - now;
+
+            if (diff <= 0) {
+                countdown.innerHTML = "🎶 It's here. Let the music begin! 🎶";
+                return;
+            }
+
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+            countdown.innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+        };
+
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        // Falling Petals Animation
+        const petalContainer = document.getElementById('petals');
+
+        function createPetal() {
+            const petal = document.createElement('div');
+            petal.classList.add('petal');
+            petal.style.left = Math.random() * 100 + 'vw';
+            petal.style.animationDuration = 5 + Math.random() * 5 + 's';
+            petal.style.opacity = Math.random() * 0.7 + 0.3;
+            petalContainer.appendChild(petal);
+
+            setTimeout(() => {
+                petal.remove();
+            }, 10000);
+        }
+
+        setInterval(createPetal, 300);
+
+        // Music Player
+        const audioPlayer = document.getElementById('audioPlayer');
+        const playButton = document.getElementById('playButton');
+        const pauseButton = document.getElementById('pauseButton');
+        const nextButton = document.getElementById('nextButton');
+        const showSongsButton = document.getElementById('showSongsButton');
+        const songList = document.getElementById('songList');
+        const nowPlaying = document.getElementById('nowPlaying');
+
+           const songs = [
+    { title: "Jungkook - Still With You", url: "/home/ace/Downloads/BTS Jungkook (정국) 'Still With You' Lyrics.mp3" },
+    { title: "Jungkook - Standing Next to You", url: "/home/ace/Downloads/정국 (Jung Kook) 'Standing Next to You' Official MV.mp3" },
+    { title: "Jungkook - Euphoria : Theme of LOVE YOURSELF 起 Wonder", url: "/home/ace/Downloads/BTS (방탄소년단) 'Euphoria _ Theme of LOVE YOURSELF 起 Wonder'.mp3" },
+    { title: "Jungkook - Yes or No", url: "/home/ace/Downloads/Jungkook (정국) 'Yes or No' Lyrics.mp3" },
+   
+];
+
+        // Keep track of currently playing song
+        let currentSongIndex = -1;
+        let selectedSongIndex = -1;
+        let isPlaying = false;
+
+        // Initialize song list
+        function initializeSongList() {
+            songs.forEach((song, index) => {
+                const songItem = document.createElement('div');
+                songItem.classList.add('song-item');
+                songItem.setAttribute('data-index', index);
+                songItem.innerHTML = `
+                    <div class="song-status"></div>
+                    <div class="song-item-title">${song.title}</div>
+                `;
+                
+                // Add click event to select only this song
+                songItem.addEventListener('click', function() {
+                    const songIndex = parseInt(this.getAttribute('data-index'));
+                    selectSong(songIndex);
+                });
+                
+                songList.appendChild(songItem);
+            });
+        }
+        
+        // Select a single song
+        function selectSong(index) {
+            // Remove selection from all songs
+            document.querySelectorAll('.song-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+            
+            // If clicking the already selected song, deselect it
+            if (selectedSongIndex === index) {
+                selectedSongIndex = -1;
+                return;
+            }
+            
+            // Select the new song
+            selectedSongIndex = index;
+            document.querySelector(`.song-item[data-index="${index}"]`).classList.add('selected');
+        }
+
+        // Initialize song list on page load
+        initializeSongList();
+
+        // Play selected song
+        function playSelectedSong() {
+            if (selectedSongIndex === -1) {
+                nowPlaying.textContent = "No song selected! Please choose a song.";
+                return;
+            }
+            
+            currentSongIndex = selectedSongIndex;
+            
+            // Set the audio source and play
+            audioPlayer.src = songs[currentSongIndex].url;
+            audioPlayer.play();
+            isPlaying = true;
+            
+            // Update now playing text
+            nowPlaying.textContent = `Now Playing: ${songs[currentSongIndex].title}`;
+            
+            // Highlight current song in the list
+            document.querySelectorAll('.song-item').forEach((item) => {
+                item.classList.remove('active');
+            });
+            document.querySelector(`.song-item[data-index="${currentSongIndex}"]`).classList.add('active');
+        }
+
+        // Play button event
+        playButton.addEventListener('click', () => {
+            if (!isPlaying) {
+                playSelectedSong();
+            } else {
+                audioPlayer.play();
+            }
+        });
+
+        // Pause button event
+        pauseButton.addEventListener('click', () => {
+            audioPlayer.pause();
+            isPlaying = false;
+        });
+
+        // Next button event
+        nextButton.addEventListener('click', () => {
+            // Go to the next song in the list
+            let nextIndex = currentSongIndex + 1;
+            if (nextIndex >= songs.length) {
+                nextIndex = 0;
+            }
+            
+            // Select and play the next song
+            selectSong(nextIndex);
+            playSelectedSong();
+        });
+
+        // Show/hide song list
+        showSongsButton.addEventListener('click', () => {
+            songList.classList.toggle('show');
+            showSongsButton.textContent = songList.classList.contains('show') ? 'Hide Songs' : 'Choose Songs';
+        });
+
+        // When a song ends, play the next one
+        audioPlayer.addEventListener('ended', () => {
+            let nextIndex = currentSongIndex + 1;
+            if (nextIndex >= songs.length) {
+                nextIndex = 0;
+            }
+            
+            selectSong(nextIndex);
+            playSelectedSong();
+        });
+    </script>
+</body>
+</html>
