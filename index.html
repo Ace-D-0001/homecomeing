@@ -4,7 +4,77 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jeon's Countdown for Rose</title>
+    <script src="https://w.soundcloud.com/player/api.js"></script>
     <style>
+    #popupBtn {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background-color: #d8b4f8;
+      color: #0d0221;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 30px;
+      font-weight: bold;
+      cursor: pointer;
+      z-index: 1001;
+      transition: all 0.3s ease;
+    }
+
+    #popupBtn:hover {
+      background-color: #fff;
+      transform: scale(1.05);
+    }
+
+    /* 💬 Popup Box */
+    #popupBox {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(13, 2, 33, 0.95);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    .popup-content {
+      background-color: rgba(255, 255, 255, 0.1);
+      padding: 30px;
+      border-radius: 20px;
+      max-width: 500px;
+      color: white;
+      text-align: left;
+      border-left: 5px solid #d8b4f8;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+      font-size: 1.1em;
+      line-height: 1.6;
+    }
+
+    .popup-content .close-btn {
+      margin-top: 20px;
+      background-color: #d8b4f8;
+      color: #0d0221;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 25px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .popup-content .close-btn:hover {
+      background-color: #fff;
+      transform: scale(1.05);
+    }
+
+    @keyframes fadeIn {
+      from {opacity: 0;}
+      to {opacity: 1;}
+    }
         body {
             margin: 0;
             padding: 0;
@@ -199,6 +269,12 @@
             font-size: 12px;
         }
         
+        /* Player Container Styles */
+        #playerContainer {
+            width: 100%;
+            margin-top: 15px;
+        }
+        
         /* Remember This Letter Box Styles */
         .letter-section {
             max-width: 800px;
@@ -230,6 +306,27 @@
     </style>
 </head>
 <body>
+ <button id="popupBtn">💌</button>
+
+  <!-- 💬 Popup Message Box -->
+  <div id="popupBox">
+    <div class="popup-content">
+      <h1>Dear Rose,</h1>
+    <p>I know the one you hold closest to your heart isn't with you right now, and as much as I wish I could.</p>
+    <p>do something about it, I can't. </p>
+    <p>While the days may feel long, there's a way I can help make this waiting a little sweeter. Please</p>
+    <p>accept this small gift, a token to help ease the wait.</p>
+    <p> </p>
+    <p>truly hope it brings you a little comfort, and that it won't feel like a burden.</p>
+        <p><strong>Yours,</strong><br>Rifu</p>
+      <button class="close-btn" onclick="closePopup()">Close</button>
+    </div>
+  </div>
+
+  <!-- Existing <script> block -->
+  <!-- Keep your whole JavaScript for countdown, music player, petals, etc. -->
+
+  <!-- 💌 Popup Script -->
     <div class="container">
         <img class="main-img" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTVV1YjdvYZkK2A63pPCku8Sx6D82rVrEdMAHBxdSbU0Fhx2jzx" alt="Jeon Jungkook">
         <h1>Jeon Jungkook will come back to Rose in </h1>
@@ -254,6 +351,7 @@
                 <div class="song-list" id="songList">
                     <!-- Song list will be populated by JavaScript -->
                 </div>
+                <div id="playerContainer" style="width:100%;"></div>
             </div>
         </div>
         
@@ -263,13 +361,24 @@
             <div class="letter-content">
                 <p>Dear Rose,</p>
                 
-                <p>When you look at the stars tonight, remember that we're under the same sky. Distance may separate us physically, but our hearts remain connected through every melody I sing. Each note carries my thoughts to you, hoping they reach your heart.</p>
-                
-                <p>They say patience is a virtue, and I believe our patience will be rewarded. Until that day comes, I'll continue to pour my feelings into my music, creating songs that carry my message across oceans and continents.</p>
-                
-                <p>Keep this letter close on days when waiting feels impossible. Know that every second that passes brings us one moment closer to each other. The countdown isn't just numbers—it's the heartbeats that will eventually sync when we meet.</p>
-                
-                <p>Stay strong, stay beautiful, and most importantly, stay you. Time and distance are merely temporary obstacles in our story.</p>
+                <p>It's already the end of November It's very windy</p>
+                <p>As you know, I'm writing a letter to you</p>
+                <p>In December, I will start a new journey I'm leaving you for a while to serve in the military</p>
+                <p>As I share this news, I feel heavy in my heart and warm as I think of precious memories with Every moment I've had with</p>
+                <p>As I share this news, I feel heavy in my heart and warm as I think of precious memories with You Every moment I've had with</p>
+                <p>you so far has been the most</p>
+                <p>brilliant time of my life</p>
+                <p>Rose you laughter, support, and love led me to this point</p>
+                <p>Thank you for supporting my dream and walking with me</p>
+                <p>I'm careful to tell you to wait while you're in the military A year and a half is a long time. So I can't be selfish I promise that I'll be on</p>
+                <p>stage with a better performance where I've always been</p>
+                <p>I hope you live is filled with laughter and happiness</p>
+                <p>I hope you fill up your daily life in a healthy and beautiful way</p>
+                <p>I will miss you deeply while waiting for the day when we meet again and talk about new things</p>
+                 <p>Don't get sick and stay healthy</p>
+                <p>I love you.</p>
+             
+              
                 
                 <div class="letter-signature">
                     Forever yours,<br>
@@ -281,8 +390,6 @@
 
    
     <div class="petals" id="petals"></div>
-
-    <audio id="audioPlayer"></audio>
 
     <script>
         // Countdown Timer
@@ -328,41 +435,45 @@
         setInterval(createPetal, 300);
 
         // Music Player
-        const audioPlayer = document.getElementById('audioPlayer');
         const playButton = document.getElementById('playButton');
         const pauseButton = document.getElementById('pauseButton');
         const nextButton = document.getElementById('nextButton');
         const showSongsButton = document.getElementById('showSongsButton');
         const songList = document.getElementById('songList');
         const nowPlaying = document.getElementById('nowPlaying');
+        const playerContainer = document.getElementById('playerContainer');
 
-           const songs = [
-  {
-    title: "Jungkook - Still With You",
-    url: "https://raw.githubusercontent.com/Ace-D-0001/homecomeing/index/BTS%20Jungkook%20(%EC%A0%95%EA%B5%AD)%20‘Still%20With%20You’%20Lyrics.mp3"
-  },
-  {
-    title: "Jungkook - Standing Next to You",
-    url: "https://raw.githubusercontent.com/Ace-D-0001/homecomeing/index/%EC%A0%95%EA%B5%AD%20(Jung%20Kook)%20‘Standing%20Next%20to%20You’%20Official%20Audio.mp3"
-  },
-  {
-    title: "Jungkook - Euphoria : Theme of LOVE YOURSELF 起 Wonder",
-    url: "https://drive.google.com/drive/folders/11xOcKQ_2xxqz9a6PV1_3UfuJq5rc7Ibg"
-  },
-  {
-    title: "Jungkook - Yes or No",
-    url: "https://raw.githubusercontent.com/Ace-D-0001/homecomeing/index/Jungkook%20(%EC%A0%95%EA%B5%AD)%20Yes%20or%20No%20Lyrics.mp3"
-  }
-];
-
+        // Songs array with proper SoundCloud embed links
+          const songs = [
+            { 
+                title: "Still With You - Jeon Jungkook", 
+                src: "https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/833810287&color=%236e7fc6&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true"
+            },
+            { 
+            
+                title: "Jungkook - Standing Next to You", 
+                src: "https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/1655611641&color=%236e7fc6&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true"
+            },
+            { 
+                title: "Jungkook - Euphoria ", 
+                src: "https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/425500551&color=%236e7fc6&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true"
+            },
+            { 
+                title: "Jungkook - Yes or No", 
+                src: "https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/1655623821&color=%236e7fc6&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true"
+            }
+        ];
 
         // Keep track of currently playing song
         let currentSongIndex = -1;
         let selectedSongIndex = -1;
         let isPlaying = false;
+        let widget = null;
 
         // Initialize song list
         function initializeSongList() {
+            songList.innerHTML = ''; // Clear existing list if any
+            
             songs.forEach((song, index) => {
                 const songItem = document.createElement('div');
                 songItem.classList.add('song-item');
@@ -372,7 +483,7 @@
                     <div class="song-item-title">${song.title}</div>
                 `;
                 
-                // Add click event to select only this song
+                // Add click event to select song
                 songItem.addEventListener('click', function() {
                     const songIndex = parseInt(this.getAttribute('data-index'));
                     selectSong(songIndex);
@@ -400,9 +511,6 @@
             document.querySelector(`.song-item[data-index="${index}"]`).classList.add('selected');
         }
 
-        // Initialize song list on page load
-        initializeSongList();
-
         // Play selected song
         function playSelectedSong() {
             if (selectedSongIndex === -1) {
@@ -412,34 +520,69 @@
             
             currentSongIndex = selectedSongIndex;
             
-            // Set the audio source and play
-            audioPlayer.src = songs[currentSongIndex].url;
-            audioPlayer.play();
-            isPlaying = true;
+            // Clear previous player if exists
+            playerContainer.innerHTML = '';
             
-            // Update now playing text
-            nowPlaying.textContent = `Now Playing: ${songs[currentSongIndex].title}`;
+            // Create iframe for SoundCloud
+            const iframe = document.createElement('iframe');
+            iframe.width = "100%";
+            iframe.height = "166";
+            iframe.scrolling = "no";
+            iframe.frameBorder = "no";
+            iframe.allow = "autoplay";
+            iframe.src = songs[currentSongIndex].src;
+            playerContainer.appendChild(iframe);
             
-            // Highlight current song in the list
-            document.querySelectorAll('.song-item').forEach((item) => {
-                item.classList.remove('active');
-            });
-            document.querySelector(`.song-item[data-index="${currentSongIndex}"]`).classList.add('active');
+            // Initialize SoundCloud Widget API
+            setTimeout(() => {
+                widget = SC.Widget(iframe);
+                
+                widget.bind(SC.Widget.Events.READY, function() {
+                    widget.play();
+                    isPlaying = true;
+                    
+                    // Update now playing text
+                    nowPlaying.textContent = `Now Playing: ${songs[currentSongIndex].title}`;
+                    
+                    // Highlight current song in the list
+                    document.querySelectorAll('.song-item').forEach((item) => {
+                        item.classList.remove('active');
+                    });
+                    document.querySelector(`.song-item[data-index="${currentSongIndex}"]`).classList.add('active');
+                });
+                
+                // When track ends, play next song
+                widget.bind(SC.Widget.Events.FINISH, function() {
+                    let nextIndex = currentSongIndex + 1;
+                    if (nextIndex >= songs.length) {
+                        nextIndex = 0;
+                    }
+                    
+                    selectSong(nextIndex);
+                    playSelectedSong();
+                });
+            }, 100);
         }
+
+        // Initialize song list on page load
+        initializeSongList();
 
         // Play button event
         playButton.addEventListener('click', () => {
-            if (!isPlaying) {
+            if (!widget || currentSongIndex === -1) {
                 playSelectedSong();
             } else {
-                audioPlayer.play();
+                widget.play();
+                isPlaying = true;
             }
         });
 
         // Pause button event
         pauseButton.addEventListener('click', () => {
-            audioPlayer.pause();
-            isPlaying = false;
+            if (widget) {
+                widget.pause();
+                isPlaying = false;
+            }
         });
 
         // Next button event
@@ -460,17 +603,19 @@
             songList.classList.toggle('show');
             showSongsButton.textContent = songList.classList.contains('show') ? 'Hide Songs' : 'Choose Songs';
         });
+      
+  const popupBtn = document.getElementById("popupBtn");
+  const popupBox = document.getElementById("popupBox");
 
-        // When a song ends, play the next one
-        audioPlayer.addEventListener('ended', () => {
-            let nextIndex = currentSongIndex + 1;
-            if (nextIndex >= songs.length) {
-                nextIndex = 0;
-            }
-            
-            selectSong(nextIndex);
-            playSelectedSong();
-        });
+  popupBtn.addEventListener("click", () => {
+    popupBox.style.display = "flex";
+  });
+
+  function closePopup() {
+    popupBox.style.display = "none";
+  }
+
+
     </script>
 </body>
 </html>
